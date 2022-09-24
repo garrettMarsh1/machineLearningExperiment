@@ -7,7 +7,7 @@ class Car{
 
         this.speed = 0;
         this.acceleration = 3;
-        this.maxSpeed = maxSpeed;
+        this.maxSpeed = maxSpeed/1.8;
         this.friction = 0.05;
         this.angle = 0;
         this.damaged = false;
@@ -17,7 +17,7 @@ class Car{
         if(controlType != "DUMMY"){
             this.sensor = new Sensor(this);
             this.brain = new NeuralNetwork(
-                [this.sensor.rayCount, 6, 4]
+                [this.sensor.rayCount, 10, 8]
                 );
         }
         this.controls = new Controls(controlType);
@@ -30,7 +30,7 @@ class Car{
             this.damaged = this.#assessDamage(roadBorders, obstacles);
         }
         if(this.sensor){
-            this.sensor.update(roadBorders, obstacles);
+            this.sensor.update(roadBorders, obstacles, );
             const offsets = this.sensor.readings.map(
                 s=>s==null?0:1-s.offset
             );
@@ -42,6 +42,10 @@ class Car{
                 this.controls.left = outputs[1];
                 this.controls.right = outputs[2];
                 this.controls.reverse = outputs[3];
+                this.controls.forwardEase = outputs[4];
+                this.controls.leftEase = outputs[5];
+                this.controls.rightEase = outputs[6];
+                this.controls.reverseEase = outputs[7];
             }
 
             }          
@@ -94,6 +98,13 @@ class Car{
             this.speed -= this.acceleration;
         }
 
+        if(this.controls.forwardEase){
+            this.speed += this.acceleration/1.1;
+        }
+        if(this.controls.reverseEase){
+            this.speed -= this.acceleration/1.1;
+        }
+
         if(this.speed > this.maxSpeed){
             this.speed = this.maxSpeed;
         }
@@ -122,10 +133,17 @@ class Car{
             if(this.controls.right){
                 this.angle -= 0.03*flip;
             }
+            if(this.controls.leftEase){
+                this.angle += 0.01*flip;
+            }
+            if(this.controls.rightEase){
+                this.angle -= 0.01*flip;
+            }
+            
         }
 
-        this.x -= Math.sin(this.angle) * this.speed;
-        this.y -= Math.cos(this.angle) * this.speed;
+        this.x -= Math.sin(this.angle) * this.speed/1.5;
+        this.y -= Math.cos(this.angle) * this.speed/1.5;
     }
 
     draw(ctx, color, drawSensor=false){

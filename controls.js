@@ -4,6 +4,11 @@ class Controls{
          this.left=false;
          this.right=false;
          this.reverse=false;
+         this.forwardEase=false;
+         this.leftEase=false;
+         this.rightEase=false;
+         this.reverseEase=false;
+
  
          switch(type){
              case "KEYS":
@@ -30,6 +35,27 @@ class Controls{
                  case "ArrowDown":
                      this.reverse=true;
                      break;
+
+                 case "ArrowLeft" + "Shift":
+                     this.left=true;
+                     break;
+                 case "ArrowRight" + "Shift":
+                     this.right=true;
+                     break;
+                 case "ArrowUp" + "Shift":
+                     this.forward=true;
+                     break;
+                 case "ArrowDown" + "Shift":
+                     this.reverse=true;
+                     break;  
+
+
+
+
+
+
+
+
              }
          }
          document.onkeyup=(event)=>{
@@ -44,6 +70,19 @@ class Controls{
                      this.forward=false;
                      break;
                  case "ArrowDown":
+                     this.reverse=false;
+                     break;
+
+                 case "ArrowLeft" + "Shift":
+                     this.left=false;
+                     break;
+                 case "ArrowRight" + "Shift":
+                     this.right=false;
+                     break;
+                 case "ArrowUp" + "Shift":
+                     this.forward=false;
+                     break;
+                 case "ArrowDown" + "Shift":
                      this.reverse=false;
                      break;
              }
