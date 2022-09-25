@@ -1,4 +1,4 @@
-class Car{
+class Traffic{
     constructor(x, y, width, height, controlType, maxSpeed=3){
         this.x=x;
         this.y=y;
@@ -16,8 +16,8 @@ class Car{
 
         if(controlType != "BOT"){
             this.sensor = new Sensor(this);
-            this.brain = new NeuralNetwork(
-                [this.sensor.rayCount, 6, 8]
+            this.trafficBrain = new TrafficNeuralNetwork(
+                [this.sensor.rayCount, 6, 4]
                 );
         }
         this.controls = new Controls(controlType);
@@ -27,38 +27,34 @@ class Car{
         if(!this.damaged){
             this.#move();
             this.polygon = this.#createPolygon();
-            this.damaged = this.#assessDamage(roadBorders, obstacles);
+            this.damaged = this.#assessDamage(roadBorders, obstacles, cars );
         }
         if(this.sensor){
-            this.sensor.update(roadBorders, obstacles, );
+            this.sensor.update(roadBorders, obstacles, cars );
             const offsets = this.sensor.readings.map(
                 s=>s==null?0:1-s.offset
             );
-            const outputs = NeuralNetwork.feedForward(offsets, this.brain);
+            const outputs = TrafficNeuralNetwork.feedForward(offsets, this.trafficBrain);
             
 
-            if(this.brain){
+            if(this.trafficBrain){
                 this.controls.forward = outputs[0];
-                this.controls.left = outputs[1];
-                this.controls.right = outputs[2];
                 this.controls.reverse = outputs[3];
                 this.controls.forwardEase = outputs[4];
-                this.controls.leftEase = outputs[5];
-                this.controls.rightEase = outputs[6];
                 this.controls.reverseEase = outputs[7];
             }
 
             }          
     }
 
-    #assessDamage(roadBorders, obstacles){
+    #assessDamage(roadBorders, traffic, cars){
         for(let i = 0; i < roadBorders.length; i++){
-            if(polyIntersect(this.polygon, roadBorders[i])){
+            if(polyIntersect(this.polygon, roadBorders[i], traffic[i], cars[i])){
                 return true;
             }
         }
-        for(let i = 0; i < obstacles.length; i++){
-            if(polyIntersect(this.polygon, obstacles[i].polygon)){
+        for(let i = 0; i < traffic.length; i++){
+            if(polyIntersect(this.polygon, traffic[i].polygon, cars[i].polygon)){
                 return true;
             }
         }
@@ -124,23 +120,7 @@ class Car{
             this.speed = 0;
         }
 
-        if(this.speed != 0){
-            const flip=this.speed>0?1:-1;
-
-            if(this.controls.left){
-                this.angle += 0.03*flip;
-            }
-            if(this.controls.right){
-                this.angle -= 0.03*flip;
-            }
-            if(this.controls.leftEase){
-                this.angle += 0.01*flip;
-            }
-            if(this.controls.rightEase){
-                this.angle -= 0.01*flip;
-            }
-            
-        }
+       
 
         this.x -= Math.sin(this.angle) * this.speed;
         this.y -= Math.cos(this.angle) * this.speed;
@@ -148,7 +128,7 @@ class Car{
 
     draw(ctx, color, drawSensor=false){
         if(this.damaged){
-            ctx.fillStyle = "red";
+            ctx.fillStyle = "lightcoral";
         }else{
             ctx.fillStyle = color;
         }

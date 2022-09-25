@@ -31,8 +31,14 @@ button:hover{
    
 }
 
+#trafficNetworkCanvas{
+    background: black;
+    justify-content: left;
+   
+}
+
 #carCanvas{
     background: lightgrey;
-    
+    justify-content: center;
    
 }

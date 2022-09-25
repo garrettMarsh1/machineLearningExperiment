@@ -9,7 +9,7 @@ class Sensor{
         this.readings=[];
     }
 
-    update(roadBorders,obstacles){
+    update(roadBorders,obstacles, traffic){
         this.#castRays();
         this.readings=[];
         for(let i=0;i<this.rays.length;i++){
@@ -17,7 +17,8 @@ class Sensor{
                 this.#getReading(
                     this.rays[i],
                     roadBorders,
-                    obstacles
+                    obstacles,
+                    traffic
                 )
             );
         }
@@ -31,7 +32,9 @@ class Sensor{
                 ray[0],
                 ray[1],
                 roadBorders[i][0],
-                roadBorders[i][1]
+                roadBorders[i][1],
+                traffic[i][0],
+                traffic[i][1]
             );
             if(touch){
                 touches.push(touch);
