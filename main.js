@@ -6,7 +6,7 @@ networkCanvas.width=300;
 const trafficNetworkCanvas=document.getElementById("trafficNetworkCanvas");
 trafficNetworkCanvas.width=100;
 
-let trafficBrain = TrafficNeuralNetwork.trafficBrain
+//let brain = TrafficNeuralNetwork.brain
 
 carCanvas.width=200;
 
@@ -111,7 +111,7 @@ function discardBestCars(){
 
 //saving and discard best/worst traffic runs
 
-// CODE NOT WORKING - trafficBrain having scope issues
+// CODE NOT WORKING - brain having scope issues
 
 
 //save best traffic runs to storage
@@ -159,7 +159,7 @@ function generateTraffic(N2){
     const traffic=[];
     for(let i =1;i<=N2;i++){
         traffic.push(new Traffic(
-            road.getLaneCenter(random(0,3)),random(-3000, 0),15,30,"BOT",2));
+            road.getLaneCenter(random(0,3)),random(-3000, 0),15,30,"AI",2));
 
     }
     return traffic;
@@ -188,13 +188,13 @@ function animate(time){
 
         ));
     // logic for the best traffic path
-    bestTrafficPath = cars.find(
+    bestTrafficPath = traffic.find(
         c=>c.y==Math.min(
             ...traffic.map(c=>c.y)
 
         ));
     // logic for the worst traffic path    
-    worstTrafficPath = cars.find(
+    worstTrafficPath = traffic.find(
         c=>c.y==Math.max(
             ...traffic.map(c=>c.y)
 
@@ -208,13 +208,15 @@ function animate(time){
     
     carCtx.save();
     carCtx.translate(0, -bestPath.y + carCanvas.height*0.7);
+    //trafficCtx.translate(0, -bestTrafficPath.y + carCanvas.height*0.7);
 
-    road.draw(trafficCtx);
+    road.draw(carCtx);
 
     // drawing traffic
     for(let i =0; i<traffic.length; i++){
         traffic[i].draw(trafficCtx, "black");
     }
+    bestTrafficPath.draw(trafficCtx, "black", true);
     
     
     // opacity of the parallel cars in current run
@@ -239,7 +241,7 @@ function animate(time){
 
 
     //drawing the best traffic neural network
-    //Visualizer.drawNetwork(trafficNetworkCtx, bestTrafficPath.trafficBrain);
+    TrafficVisualizer.drawTrafficNetwork(trafficNetworkCtx, bestTrafficPath.trafficBrain);
 
     // drawing the best car's neural network
     Visualizer.drawNetwork( networkCtx, bestPath.brain);

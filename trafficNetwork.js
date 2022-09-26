@@ -1,37 +1,51 @@
 class TrafficNeuralNetwork {
     constructor(neuronCounts) {
-        this.levels = [];
+        this.trafficLevels = [];
         for (let i = 0; i < neuronCounts.length-1; i++) {
-            this.levels.push(new TrafficLevel(
+            this.trafficLevels.push(new TrafficLevel(
                 neuronCounts[i], neuronCounts[i + 1]
             ));
         }
-    }
+        
 
-    static feedForwardTraffic(givenInputs, network) {
-        let outputs = TrafficLevel.feedForwardTraffic(
-            givenInputs, network.levels[0]);
-        for (let i = 1; i < network.levels.length; i++) {
-            outputs = TrafficLevel.feedForwardTraffic(
-                outputs, network.levels[i]);
+    }
+    /**
+     * 
+     * @param {*} givenTrafficInputs 
+     * @param {*} trafficNetwork 
+     * @returns 
+     */
+    static feedForwardTraffic(givenTrafficInputs, trafficNetwork) {
+        let trafficOutputs = TrafficLevel.feedForwardTraffic(
+            givenTrafficInputs, trafficNetwork.trafficLevels[0]);
+        for (let i = 1; i < trafficNetwork.trafficLevels.length; i++) {
+            trafficOutputs = TrafficLevel.feedForwardTraffic(
+                trafficOutputs, trafficNetwork.trafficLevels[i]);
+                console.log(givenTrafficInputs)
         }
-        return outputs;
+        return trafficOutputs;
+        
     }
 
-    static mutateTraffic(network, amount =1){
-        network.levels.forEach(level => {
-            for(let i = 0; i<level.biases.length; i++){
-                level.biases[i]=lerp(
-                    level.biases[i],
+    /**
+     * 
+     * @param {*} trafficNetwork 
+     * @param {*} amount 
+     */
+    static mutateTraffic(trafficNetwork, amount =1){
+        trafficNetwork.trafficLevels.forEach(trafficLevel => {
+            for(let i = 0; i<trafficLevel.trafficBiases.length; i++){
+                trafficLevel.trafficBiases[i]=lerp(
+                    trafficLevel.trafficBiases[i],
                     Math.random()*2-1,
                     amount
                     
                     );
             }
-            for(let i = 0; i<level.weights.length; i++){
-                for(let j = 0; j<level.weights[i].length; j++){
-                    level.weights[i][j]=lerp(
-                        level.weights[i][j],
+            for(let i = 0; i<trafficLevel.trafficWeights.length; i++){
+                for(let j = 0; j<trafficLevel.trafficWeights[i].length; j++){
+                    trafficLevel.trafficWeights[i][j]=lerp(
+                        trafficLevel.trafficWeights[i][j],
                         Math.random()*2-1,
                         amount
                         );
@@ -44,48 +58,56 @@ class TrafficNeuralNetwork {
     
 
 class TrafficLevel {
-    constructor(inputCount, outputCount) {
-        this.inputs = new Array(inputCount);
-        this.outputs = new Array(outputCount);
-        this.biases = new Array(outputCount);
+    constructor(trafficInputCount, trafficOutputCount) {
+        this.trafficInputs = new Array(trafficInputCount);
+        this.trafficOutputs = new Array(trafficOutputCount);
+        this.trafficBiases = new Array(trafficOutputCount);
 
-        this.weights = [];
-        for (let i = 0; i < inputCount; i++) {
-            this.weights[i] = new Array(outputCount);
+        this.trafficWeights = [];
+        for (let i = 0; i < trafficInputCount; i++) {
+            this.trafficWeights[i] = new Array(trafficOutputCount);
         }
         TrafficLevel.#randomizeTraffic(this);
     }
-
-    static #randomizeTraffic(level){
-        for(let i =0; i < level.inputs.length; i++){
-            for(let j = 0; j < level.outputs.length; j++){
-                level.weights[i][j] = Math.random()*2-1;
+    /**
+     * 
+     * @param {*} trafficLevel 
+     */
+    static #randomizeTraffic(trafficLevel){
+        for(let i =0; i < trafficLevel.trafficInputs.length; i++){
+            for(let j = 0; j < trafficLevel.trafficOutputs.length; j++){
+                trafficLevel.trafficWeights[i][j] = Math.random()*2-1;
             }
         }
 
-        for(let i = 0; i < level.biases.length; i++){
-            level.biases[i] = Math.random()*2-1;
+        for(let i = 0; i < trafficLevel.trafficBiases.length; i++){
+            trafficLevel.trafficBiases[i] = Math.random()*2-1;
         }
 
     }
-
-    static feedForwardTraffic(givenInputs, level) {
-        for(let i=0;i<level.inputs.length;i++){
-            level.inputs[i] = givenInputs[i];
+    /**
+     * 
+     * @param {*} givenTrafficInputs 
+     * @param {*} trafficLevel 
+     * @returns 
+     */
+    static feedForwardTraffic(givenTrafficInputs, trafficLevel) {
+        for(let i=0;i<trafficLevel.trafficInputs.length;i++){
+            trafficLevel.trafficInputs[i] = givenTrafficInputs[i];
         }
 
-        for(let i = 0; i<level.outputs.length; i++){
+        for(let i = 0; i<trafficLevel.trafficOutputs.length; i++){
             let sum = 0;
-            for(let j = 0; j<level.inputs.length; j++){
-                sum += level.inputs[j]*level.weights[j][i];
+            for(let j = 0; j<trafficLevel.trafficInputs.length; j++){
+                sum += trafficLevel.trafficInputs[j]*trafficLevel.trafficWeights[j][i];
             }
 
-            if(sum>level.biases[i]>0){
-                level.outputs[i] = 1;
+            if(sum>trafficLevel.trafficBiases[i]>0){
+                trafficLevel.trafficOutputs[i] = 1;
             }else{
-                level.outputs[i] = 0;
+                trafficLevel.trafficOutputs[i] = 0;
             }
         }    
-        return level.outputs  
+        return trafficLevel.trafficOutputs  
     }
 }

@@ -15,7 +15,7 @@ class Car{
         this.angle = 0;
         this.damaged = false;
 
-        this.useBrain=controlType=="AI";
+        this.brain=controlType=="AI"; 
 
         if(controlType != "BOT"){
             this.sensor = new Sensor(this);
@@ -24,6 +24,8 @@ class Car{
                 );
         }
         this.controls = new Controls(controlType);
+        //console.log(this.brain)
+        
     }
 /**
  * 
@@ -54,6 +56,7 @@ class Car{
                 this.controls.rightEase = outputs[6];
                 this.controls.reverseEase = outputs[7];
             }
+            //console.log(outputs)
 
             }          
     }

@@ -12,7 +12,7 @@ class Traffic{
         this.angle = 0;
         this.damaged = false;
 
-        this.useBrain=controlType=="AI";
+        this.trafficBrain=controlType=="AI";
 
         if(controlType != "BOT"){
             this.sensor = new Sensor(this);
@@ -21,33 +21,36 @@ class Traffic{
                 );
         }
         this.controls = new Controls(controlType);
+        console.log(this.trafficBrain);
     }
+    
 
     update(roadBorders, obstacles, cars){
         if(!this.damaged){
-            this.#move();
-            this.polygon = this.#createPolygon();
-            this.damaged = this.#assessDamage(roadBorders, obstacles, cars, traffic );
+            this.#moveTraffic();
+            this.polygon = this.#createTrafficPolygon();
+            this.damaged = this.#assessTrafficDamage(roadBorders, obstacles, cars, traffic );
         }
         if(this.sensor){
             this.sensor.update(roadBorders, obstacles, traffic );
             const offsets = this.sensor.readings.map(
                 s=>s==null?0:1-s.offset
             );
-            const outputs = TrafficNeuralNetwork.feedForward(offsets, this.trafficBrain);
+            const trafficOutputs = TrafficNeuralNetwork.feedForwardTraffic(offsets, this.trafficBrain);
             
 
             if(this.trafficBrain){
-                this.controls.forward = outputs[0];
-                this.controls.reverse = outputs[3];
-                this.controls.forwardEase = outputs[4];
-                this.controls.reverseEase = outputs[7];
+                this.controls.forward = trafficOutputs[0];
+                
+                this.controls.forwardEase = trafficOutputs[2];
+                
             }
+            
 
             }          
     }
 
-    #assessDamage(roadBorders, traffic, cars){
+    #assessTrafficDamage(roadBorders, traffic, cars){
         for(let i = 0; i < roadBorders.length; i++){
             if(polyIntersect(this.polygon, roadBorders[i], traffic[i], cars[i])){
                 return true;
@@ -60,7 +63,7 @@ class Traffic{
         }
     }
 
-    #createPolygon(){
+    #createTrafficPolygon(){
         const points=[];
         const rad = Math.hypot(this.width, this.height)/2;
         const alpha = Math.atan2(this.width, this.height);
@@ -86,7 +89,7 @@ class Traffic{
     }
 
 
-    #move(){
+    #moveTraffic(){
         if(this.controls.forward){
             this.speed += this.acceleration;
         }

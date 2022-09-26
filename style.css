@@ -27,6 +27,7 @@ button:hover{
 
 #networkCanvas{
     background: black;
+    justify-content: right;
     
    
 }
