@@ -1,9 +1,12 @@
+
 const carCanvas=document.getElementById("carCanvas");
 carCanvas.width=200;
 const networkCanvas=document.getElementById("networkCanvas");
 networkCanvas.width=300;
 const trafficNetworkCanvas=document.getElementById("trafficNetworkCanvas");
 trafficNetworkCanvas.width=100;
+
+let trafficBrain = TrafficNeuralNetwork.trafficBrain
 
 carCanvas.width=200;
 
@@ -16,8 +19,8 @@ const trafficCtx=carCanvas.getContext("2d");
 
 const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
 
-const N = 200;
-const N2 = 100;
+const N = 1000;
+const N2 = 30;
 const cars = generateCars(N);
 const traffic = generateTraffic(N2);
 let bestPath = cars[0];
@@ -28,17 +31,17 @@ if(localStorage.getItem("bestRuns")){
         cars[i].brain = JSON.parse
         (localStorage.getItem("bestRuns"));
         if(i!=0){
-            NeuralNetwork.mutate(cars[i].brain, .1964);
+            NeuralNetwork.mutate(cars[i].brain, .2002);
         }
     }
 }
 
 if(localStorage.getItem("bestTrafficRuns")){
     for(let i = 0; i < traffic.length; i++){
-        traffic[i].brain = JSON.parse
+        traffic[i].trafficBrain = JSON.parse
         (localStorage.getItem("bestTrafficRuns"));
         if(i!=0){
-            trafficNetwork.mutate(cars[i].brain, .1964);
+            TrafficNeuralNetwork.mutateTraffic(traffic[i].trafficBrain, .1964);
         }
     }
 }
@@ -73,16 +76,45 @@ if(localStorage.getItem("bestTrafficRuns")){
 
 animate();
 
-function save() {
+//saving and discard best/worst traffic runs
+function saveBestCar() {
     localStorage.setItem("bestRuns", 
     JSON.stringify(bestPath.brain));
 }
 
 
+function discardWorstCars(){
+    localStorage.removeItem("worstRuns",
+           JSON.stringify(worstPath.brain));
 
-function discard(){
-    localStorage.removeItem("bestRuns");
 }
+
+function discardBestCars(){
+    localStorage.removeItem("bestRuns",
+           JSON.stringify(bestPath.brain));
+
+}
+
+
+//saving and discard best/worst traffic runs
+function saveBestTraffic() {
+    localStorage.setItem("bestTrafficRuns", 
+    JSON.stringify(bestTrafficPath.trafficBrain));
+}
+
+function discardBestTraffic(){
+    localStorage.removeItem("worstTrafficRuns",
+           JSON.stringify(worstTrafficPath.trafficBrain));
+
+}
+
+function discardWorstTraffic(){
+    localStorage.removeItem("bestTrafficRuns",
+           JSON.stringify(worstTrafficPath.trafficBrain));
+
+}
+
+
 
 function generateCars(N){
     let cars=[];
@@ -95,7 +127,9 @@ function generateCars(N){
 function generateTraffic(N2){
     const traffic=[];
     for(let i =1;i<=N2;i++){
-        traffic.push(new Traffic(road.getLaneCenter(random(0,3)),random(-300, -3000),30,50,"BOT",random(2,7.3)));
+        traffic.push(new Traffic(
+            road.getLaneCenter(random(0,3)),random(-3000, 0),15,30,"BOT",2));
+
     }
     return traffic;
 }
@@ -104,7 +138,7 @@ function generateTraffic(N2){
 
 function animate(time){
     for(let i=0; i<traffic.length; i++){
-        traffic[i].update(road.borders, [], cars);
+        traffic[i].update(road.borders, [],traffic, cars);
     }
     for(let i=0; i<cars.length; i++){
         cars[i].update(road.borders, traffic, cars);
@@ -115,16 +149,23 @@ function animate(time){
             ...cars.map(c=>c.y)
 
         ));
+    worstPath = cars.find(
+        c=>c.y==Math.max(
+            ...cars.map(c=>c.y)
+
+        ));
+
     bestTrafficPath = cars.find(
         c=>c.y==Math.min(
-            ...cars.map(c=>c.y)
+            ...traffic.map(c=>c.y)
 
         ));
-    worstPath = cars.find(
-        c=>c.y==-Math.min(
-            ...cars.map(c=>c.y)
+    worstTrafficPath = cars.find(
+        c=>c.y==Math.max(
+            ...traffic.map(c=>c.y)
 
         ));
+
 
     carCanvas.height = window.innerHeight;
     networkCanvas.height = window.innerHeight;
@@ -134,11 +175,11 @@ function animate(time){
     carCtx.save();
     carCtx.translate(0, -bestPath.y + carCanvas.height*0.7);
 
-    road.draw(carCtx);
+    road.draw(trafficCtx);
     for(let i =0; i<traffic.length; i++){
-        traffic[i].draw(carCtx, "black");
+        traffic[i].draw(trafficCtx, "black");
     }
-    bestPath
+    bestTrafficPath
     
     
     carCtx.globalAlpha = 0.2;
@@ -157,7 +198,7 @@ function animate(time){
 
     networkCtx.lineDashOffset = -time/50;
 
-    Visualizer.drawNetwork(trafficNetworkCtx, bestTrafficPath.brain);
+    //Visualizer.drawNetwork(trafficNetworkCtx, bestTrafficPath.trafficBrain);
     Visualizer.drawNetwork( networkCtx, bestPath.brain);
 
     requestAnimationFrame(animate);

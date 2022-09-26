@@ -1,5 +1,5 @@
 class Traffic{
-    constructor(x, y, width, height, controlType, maxSpeed=3){
+    constructor(x, y, width, height, controlType, maxSpeed=2){
         this.x=x;
         this.y=y;
         this.width=width;
@@ -23,14 +23,14 @@ class Traffic{
         this.controls = new Controls(controlType);
     }
 
-    update(roadBorders, obstacles){
+    update(roadBorders, obstacles, cars){
         if(!this.damaged){
             this.#move();
             this.polygon = this.#createPolygon();
-            this.damaged = this.#assessDamage(roadBorders, obstacles, cars );
+            this.damaged = this.#assessDamage(roadBorders, obstacles, cars, traffic );
         }
         if(this.sensor){
-            this.sensor.update(roadBorders, obstacles, cars );
+            this.sensor.update(roadBorders, obstacles, traffic );
             const offsets = this.sensor.readings.map(
                 s=>s==null?0:1-s.offset
             );
