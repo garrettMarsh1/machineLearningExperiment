@@ -97,6 +97,8 @@ function discardBestCars(){
 
 
 //saving and discard best/worst traffic runs
+
+// CODE NOT WORKING - trafficBrain having scope issues
 function saveBestTraffic() {
     localStorage.setItem("bestTrafficRuns", 
     JSON.stringify(bestTrafficPath.trafficBrain));
