@@ -19,23 +19,35 @@ const trafficCtx=carCanvas.getContext("2d");
 
 const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
 
+//N = number of cars generated
 const N = 1000;
+// N2 = number of traffic generated
 const N2 = 30;
+//generate cars
 const cars = generateCars(N);
+//generate traffic
 const traffic = generateTraffic(N2);
+
+// bestPath assigned to cars array will be used to draw the best path
 let bestPath = cars[0];
+//bestTrafficPath assigned to traffic array will be used to draw the best path
 let bestTrafficPath = traffic[0];
+
+//worst path taken by the car and traffic objects meant to be discarded to optimize learning
 let worstPath = cars[0];
+let worstTrafficPath = traffic[0];
+
+//saving best runs for car
 if(localStorage.getItem("bestRuns")){
     for(let i = 0; i < cars.length; i++){
         cars[i].brain = JSON.parse
         (localStorage.getItem("bestRuns"));
         if(i!=0){
-            NeuralNetwork.mutate(cars[i].brain, .2002);
+            NeuralNetwork.mutate(cars[i].brain, .1002);
         }
     }
 }
-
+//loading best runs for the traffic 
 if(localStorage.getItem("bestTrafficRuns")){
     for(let i = 0; i < traffic.length; i++){
         traffic[i].trafficBrain = JSON.parse
@@ -48,7 +60,7 @@ if(localStorage.getItem("bestTrafficRuns")){
 
 
 
-
+//this is the traffic that is hardcoded to appear according to specific coordinates meant for testing 
 // const traffic=[
 //     new Car(road.getLaneCenter(1),-100,30,50,"BOT",2*Math.random()),
 //     new Car(road.getLaneCenter(0),-300,30,50,"BOT",2*Math.random()),
@@ -76,19 +88,20 @@ if(localStorage.getItem("bestTrafficRuns")){
 
 animate();
 
-//saving and discard best/worst traffic runs
+//saving and discard best/worst traffic runs from storage
 function saveBestCar() {
     localStorage.setItem("bestRuns", 
     JSON.stringify(bestPath.brain));
 }
 
-
+// discarding worst car paths from storage
 function discardWorstCars(){
     localStorage.removeItem("worstRuns",
            JSON.stringify(worstPath.brain));
 
 }
 
+// discards best car paths from storage
 function discardBestCars(){
     localStorage.removeItem("bestRuns",
            JSON.stringify(bestPath.brain));
@@ -99,17 +112,22 @@ function discardBestCars(){
 //saving and discard best/worst traffic runs
 
 // CODE NOT WORKING - trafficBrain having scope issues
+
+
+//save best traffic runs to storage
 function saveBestTraffic() {
     localStorage.setItem("bestTrafficRuns", 
     JSON.stringify(bestTrafficPath.trafficBrain));
 }
 
+//discards best traffic paths from storage
 function discardBestTraffic(){
     localStorage.removeItem("worstTrafficRuns",
            JSON.stringify(worstTrafficPath.trafficBrain));
 
 }
 
+//discards worst traffic paths from storage
 function discardWorstTraffic(){
     localStorage.removeItem("bestTrafficRuns",
            JSON.stringify(worstTrafficPath.trafficBrain));
@@ -117,7 +135,13 @@ function discardWorstTraffic(){
 }
 
 
-
+/**
+ * 
+ * 
+ * function that generates cars by a value of N
+ * @param {*} N 
+ * @returns 
+ */
 function generateCars(N){
     let cars=[];
     for(let i =1;i<=N;i++){
@@ -126,6 +150,11 @@ function generateCars(N){
     return cars;
 }
 
+/**
+ * function that generates traffic by a value of N2
+ * @param {*} N2 
+ * @returns 
+ */
 function generateTraffic(N2){
     const traffic=[];
     for(let i =1;i<=N2;i++){
@@ -146,22 +175,25 @@ function animate(time){
         cars[i].update(road.borders, traffic, cars);
     }
 
+    // logic for the best car path
     bestPath = cars.find(
         c=>c.y==Math.min(
             ...cars.map(c=>c.y)
 
         ));
+    // logic for the worst car path
     worstPath = cars.find(
         c=>c.y==Math.max(
             ...cars.map(c=>c.y)
 
         ));
-
+    // logic for the best traffic path
     bestTrafficPath = cars.find(
         c=>c.y==Math.min(
             ...traffic.map(c=>c.y)
 
         ));
+    // logic for the worst traffic path    
     worstTrafficPath = cars.find(
         c=>c.y==Math.max(
             ...traffic.map(c=>c.y)
@@ -178,18 +210,23 @@ function animate(time){
     carCtx.translate(0, -bestPath.y + carCanvas.height*0.7);
 
     road.draw(trafficCtx);
+
+    // drawing traffic
     for(let i =0; i<traffic.length; i++){
         traffic[i].draw(trafficCtx, "black");
     }
-    bestTrafficPath
     
     
+    // opacity of the parallel cars in current run
     carCtx.globalAlpha = 0.2;
 
+    // drawing cars
     for(let i=0; i<cars.length; i++){
         cars[i].draw(carCtx, "orange");
     }
+    // opacity of the best car in current run
     carCtx.globalAlpha = 1;
+    // drawing the best car in current run
     bestPath.draw(carCtx, "orange", true);
 
     carCtx.restore();
@@ -200,7 +237,11 @@ function animate(time){
 
     networkCtx.lineDashOffset = -time/50;
 
+
+    //drawing the best traffic neural network
     //Visualizer.drawNetwork(trafficNetworkCtx, bestTrafficPath.trafficBrain);
+
+    // drawing the best car's neural network
     Visualizer.drawNetwork( networkCtx, bestPath.brain);
 
     requestAnimationFrame(animate);

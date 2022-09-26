@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 class Car{
     constructor(x, y, width, height, controlType, maxSpeed=3){
         this.x=x;
@@ -22,7 +25,11 @@ class Car{
         }
         this.controls = new Controls(controlType);
     }
-
+/**
+ * 
+ * @param {*} roadBorders 
+ * @param {*} obstacles 
+ */
     update(roadBorders, obstacles){
         if(!this.damaged){
             this.#move();
@@ -50,7 +57,12 @@ class Car{
 
             }          
     }
-
+/**
+ * 
+ * @param {*} roadBorders 
+ * @param {*} obstacles 
+ * @returns 
+ */
     #assessDamage(roadBorders, obstacles){
         for(let i = 0; i < roadBorders.length; i++){
             if(polyIntersect(this.polygon, roadBorders[i])){
@@ -63,7 +75,10 @@ class Car{
             }
         }
     }
-
+/**
+ * 
+ * @returns 
+ */
     #createPolygon(){
         const points=[];
         const rad = Math.hypot(this.width, this.height)/2;
@@ -89,7 +104,9 @@ class Car{
         return points;
     }
 
-
+/**
+ * 
+ */
     #move(){
         if(this.controls.forward){
             this.speed += this.acceleration;
@@ -145,7 +162,12 @@ class Car{
         this.x -= Math.sin(this.angle) * this.speed;
         this.y -= Math.cos(this.angle) * this.speed;
     }
-
+/**
+ * 
+ * @param {*} ctx 
+ * @param {*} color 
+ * @param {*} drawSensor 
+ */
     draw(ctx, color, drawSensor=false){
         if(this.damaged){
             ctx.fillStyle = "red";
