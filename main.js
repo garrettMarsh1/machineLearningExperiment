@@ -174,7 +174,7 @@ function generateCars(N){
         } else {
             //traffic.push(trafficItem);
             // decide if you just skip adding all together or try to generate another piece and see if it will fit
-            console.log("im innit bruv")
+            
         }
         console.log(trafficItem)
 
