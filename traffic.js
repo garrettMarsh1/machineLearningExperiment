@@ -5,7 +5,7 @@
 
 
  class Traffic {
-    constructor(x, y, width, height, controlType, maxSpeed=3){
+    constructor(x, y, width, height, controlType, maxSpeed=2){
         this.x=x;
         this.y=y;
         this.width=width;

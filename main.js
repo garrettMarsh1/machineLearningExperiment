@@ -152,24 +152,29 @@ function generateCars(N){
  * @returns 
  */
  function generateTraffic(N2, carSize){
-    const traffic=[];
+    let traffic=[];
+    
     for(let i =1;i<=N2;i++){
         
+        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-3000, 0),30,50,"trafficAI");
         
-        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-300, 300),30,50,"trafficAI");
+
+        traffic.push(trafficItem);
+
         let itemWillBlock = willTrafficBlock(road, traffic, trafficItem, carSize);
+
+        console.log(itemWillBlock);
+        
         if (!itemWillBlock) {
+            console.log("innit bruv")
             traffic.push(trafficItem);
             
 
             
         } else {
-            if (itemWillBlock){
-                
-                
-            }
-            
+            //traffic.push(trafficItem);
             // decide if you just skip adding all together or try to generate another piece and see if it will fit
+            console.log("im innit bruv")
         }
         console.log(trafficItem)
 
@@ -177,7 +182,6 @@ function generateCars(N){
     return traffic;
     
 }
-
 
 
 
