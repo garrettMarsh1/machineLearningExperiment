@@ -33,9 +33,9 @@ class Sensor{
                 ray[0],
                 ray[1],
                 roadBorders[i][0],
-                roadBorders[i][1],
-                traffic[i][0],
-                traffic[i][1]
+                roadBorders[i][0]
+                
+                
             );
             if(touch){
                 touches.push(touch);
