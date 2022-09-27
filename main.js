@@ -18,9 +18,9 @@ const trafficCtx=carCanvas.getContext("2d");
 const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
 
 //N = number of cars generated
-const N = 100;
+const N = 1000;
 // N2 = number of traffic generated
-const N2 = 100;
+const N2 = 60;
 //generate cars
 const cars = generateCars(N);
 //generate traffic
@@ -41,7 +41,7 @@ if(localStorage.getItem("bestRuns")){
         cars[i].brain = JSON.parse
         (localStorage.getItem("bestRuns"));
         if(i!=0){
-            NeuralNetwork.mutate(cars[i].brain, 7);
+            NeuralNetwork.mutate(cars[i].brain, .2);
         }
     }
 }
@@ -107,29 +107,6 @@ function discardBestCars(){
 }
 
 
-//saving and discard best/worst traffic runs
-
-
-
-// //save best traffic runs to storage
-// function saveBestTraffic() {
-//     localStorage.setItem("bestTrafficRuns", 
-//     JSON.stringify(bestTrafficPath.trafficBrain));
-// }
-
-// //discards best traffic paths from storage
-// function discardBestTraffic(){
-//     localStorage.removeItem("worstTrafficRuns",
-//            JSON.stringify(worstTrafficPath.trafficBrain));
-
-// }
-
-// //discards worst traffic paths from storage
-// function discardWorstTraffic(){
-//     localStorage.removeItem("bestTrafficRuns",
-//            JSON.stringify(worstTrafficPath.trafficBrain));
-
-// }
 
 
 /**
@@ -156,27 +133,31 @@ function generateCars(N){
     
     for(let i =1;i<=N2;i++){
         
-        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-3000, 0),30,50,"trafficAI");
+        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-10000, 1000),30,50,"trafficAI");
         
 
-        traffic.push(trafficItem);
+        //traffic.push(trafficItem);
 
-        let itemWillBlock = willTrafficBlock(road, traffic, trafficItem, carSize);
+        let itemWillBlock = willTrafficBlockInGrid(road, traffic, trafficItem, carSize);
 
-        console.log(itemWillBlock);
+     
         
         if (!itemWillBlock) {
-            console.log("innit bruv")
             traffic.push(trafficItem);
             
-
+            
             
         } else {
-            //traffic.push(trafficItem);
-            // decide if you just skip adding all together or try to generate another piece and see if it will fit
+
+            if (itemWillBlock) {
+                traffic.push(trafficItem)
+            }
+            
+            
+            
             
         }
-        console.log(trafficItem)
+        console.log(trafficItem, cars, itemWillBlock, !itemWillBlock);
 
     }
     return traffic;
@@ -225,7 +206,7 @@ function animate(time){
 
     // drawing traffic
     for(let i =0; i<traffic.length; i++){
-        traffic[i].draw(trafficCtx, "black");
+        traffic[i].draw(carCtx, "black");
     }
     
     

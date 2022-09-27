@@ -179,9 +179,11 @@ function willTrafficBlock(road, trafficCollection, trafficItem, carSize, ) {
             if (trafficBlocksExtraGrid) {
                 return true;
             }
-            console.log(traffic)
+            //console.log(traffic)
+            
         }
     }
 
     return trafficBlocksGrid1 || trafficBlocksGrid2 || trafficBlocksGrid3
+    
 }

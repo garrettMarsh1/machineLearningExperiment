@@ -1,16 +1,15 @@
 class Sensor{
-    constructor(car, traffic){
+    constructor(car){
         this.car=car;
-        this.traffic=traffic
-        this.rayCount=9;
-        this.rayLength=100;
-        this.raySpread=Math.PI/.8;
+        this.rayCount=5;
+        this.rayLength=150;
+        this.raySpread=Math.PI/2;
 
         this.rays=[];
         this.readings=[];
     }
 
-    update(roadBorders,obstacles, traffic){
+    update(roadBorders,traffic){
         this.#castRays();
         this.readings=[];
         for(let i=0;i<this.rays.length;i++){
@@ -18,14 +17,13 @@ class Sensor{
                 this.#getReading(
                     this.rays[i],
                     roadBorders,
-                    obstacles,
                     traffic
                 )
             );
         }
     }
 
-    #getReading(ray,roadBorders,obstacles){
+    #getReading(ray,roadBorders,traffic){
         let touches=[];
 
         for(let i=0;i<roadBorders.length;i++){
@@ -33,17 +31,15 @@ class Sensor{
                 ray[0],
                 ray[1],
                 roadBorders[i][0],
-                roadBorders[i][0]
-                
-                
+                roadBorders[i][1]
             );
             if(touch){
                 touches.push(touch);
             }
         }
 
-        for(let i=0;i<obstacles.length;i++){
-            const poly=obstacles[i].polygon;
+        for(let i=0;i<traffic.length;i++){
+            const poly=traffic[i].polygon;
             for(let j=0;j<poly.length;j++){
                 const value=getIntersection(
                     ray[0],
@@ -108,7 +104,7 @@ class Sensor{
 
             ctx.beginPath();
             ctx.lineWidth=2;
-            ctx.strokeStyle="red";
+            ctx.strokeStyle="black";
             ctx.moveTo(
                 this.rays[i][1].x,
                 this.rays[i][1].y
