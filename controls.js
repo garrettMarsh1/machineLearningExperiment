@@ -14,7 +14,7 @@ class Controls{
              case "KEYS":
                  this.#addKeyboardListeners();
                  break;
-             case "BOT":
+             case "trafficAI":
                  this.forward=true;
                  break;
          }

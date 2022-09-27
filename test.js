@@ -145,38 +145,7 @@ function generateCars(N){
     return cars;
 }
 
-/**
- * function that generates traffic by a value of N2 while testing car size to prevent traffic congestion
- * @param {*} N2 
- * @param {*} carSize 
- * @returns 
- */
- function generateTraffic(N2, carSize){
-    const traffic=[];
-    for(let i =1;i<=N2;i++){
-        
-        
-        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-300, 300),30,50,"trafficAI");
-        let itemWillBlock = willTrafficBlock(road, traffic, trafficItem, carSize);
-        if (!itemWillBlock) {
-            traffic.push(trafficItem);
-            
 
-            
-        } else {
-            if (itemWillBlock){
-                
-                
-            }
-            
-            // decide if you just skip adding all together or try to generate another piece and see if it will fit
-        }
-        console.log(trafficItem)
-
-    }
-    return traffic;
-    
-}
 
 
 
