@@ -18,13 +18,18 @@ const trafficCtx=carCanvas.getContext("2d");
 const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
 
 //N = number of cars generated
-const N = 1000;
+const N = 500;
 // N2 = number of traffic generated
-const N2 = 60;
+const N2 = 20;
+
+
 //generate cars
 const cars = generateCars(N);
+
 //generate traffic
 const traffic = generateTraffic(N2);
+
+
 
 // bestPath assigned to cars array will be used to draw the best path
 let bestPath = cars[0];
@@ -41,7 +46,7 @@ if(localStorage.getItem("bestRuns")){
         cars[i].brain = JSON.parse
         (localStorage.getItem("bestRuns"));
         if(i!=0){
-            NeuralNetwork.mutate(cars[i].brain, .2);
+            NeuralNetwork.mutate(cars[i].brain, .1);
         }
     }
 }
@@ -96,14 +101,12 @@ function saveBestCar() {
 function discardWorstCars(){
     localStorage.removeItem("worstRuns",
            JSON.stringify(worstPath.brain));
-
 }
 
 // discards best car paths from storage
 function discardBestCars(){
     localStorage.removeItem("bestRuns",
            JSON.stringify(bestPath.brain));
-
 }
 
 
@@ -122,47 +125,60 @@ function generateCars(N){
     return cars;
 }
 
+function nextGenerationLoad(){
+
+}
+
+
+
+
+
+
 /**
  * function that generates traffic by a value of N2 while testing car size to prevent traffic congestion
  * @param {*} N2 
  * @param {*} carSize 
  * @returns 
  */
- function generateTraffic(N2, carSize){
+ function generateTraffic(N2){
     let traffic=[];
     
     for(let i =1;i<=N2;i++){
         
-        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-10000, 1000),30,50,"trafficAI");
+        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-10000, 0),30,50,"trafficAI", 4);
+        //let trafficItem2 = new Traffic(road.getLaneCenter(2),random(-10000, 0),30,50,"trafficAI", 3 );
+        //let trafficItem3 = new Traffic(road.getLaneCenter(3),random(-10000, 0),30,50,"trafficAI", 3 )
+
+        traffic.push(trafficItem);
         
 
         //traffic.push(trafficItem);
 
-        let itemWillBlock = willTrafficBlockInGrid(road, traffic, trafficItem, carSize);
+        //let itemWillBlock = willTrafficBlock(road, traffic, trafficItem, carSize, trafficSize);
 
-     
-        
-        if (!itemWillBlock) {
-            traffic.push(trafficItem);
+        // if (trafficItem.x != trafficItem2.x) {
+        //     traffic.push(trafficItem, trafficItem2, trafficItem3);
+                  
+        // } else {
+        //     if(trafficItem2.x == trafficItem.x){
+        //           traffic.pop( trafficItem2, trafficItem3);
+        //         }
             
-            
-            
-        } else {
-
-            if (itemWillBlock) {
-                traffic.push(trafficItem)
-            }
-            
-            
-            
-            
-        }
-        console.log(trafficItem, cars, itemWillBlock, !itemWillBlock);
+        // }
+        console.log( trafficItem,);
 
     }
     return traffic;
     
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -243,3 +259,8 @@ function animate(time){
 };
 
 
+
+
+
+
+// https://lz4.overpass-api.de/api/interpreter&API_KEY-77180fa3733c7ceda626d88f0f580aad
