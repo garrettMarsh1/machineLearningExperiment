@@ -18,9 +18,9 @@ const trafficCtx=carCanvas.getContext("2d");
 const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
 
 //N = number of cars generated
-const N = 100;
+const N = 500;
 // N2 = number of traffic generated
-const N2 = 50;
+const N2 = 30;
 
 
 //generate cars
@@ -46,7 +46,7 @@ if(localStorage.getItem("bestRuns")){
         cars[i].brain = JSON.parse
         (localStorage.getItem("bestRuns"));
         if(i!=0){
-            NeuralNetwork.mutate(cars[i].brain, .03);
+            NeuralNetwork.mutate(cars[i].brain, .1);
         }
        
     }
@@ -156,7 +156,7 @@ function generateCars(N){
     
     for(let i =1;i<=N2;i++){
         
-        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-9000, 0),30,50,"AI", random(3, 5));
+        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-9000, 0),30,50,"DUMMY", random(3, 5));
         //let trafficItem2 = new Traffic(road.getLaneCenter(2),random(-10000, 0),30,50,"trafficAI", 3 );
         //let trafficItem3 = new Traffic(road.getLaneCenter(3),random(-10000, 0),30,50,"trafficAI", 3 )
 
@@ -224,16 +224,16 @@ function animate(time){
         
 
 
-        if(cars.filter(c=>c.damaged).length>=cars.length*0.30){
+        if(cars.filter(c=>c.damaged).length>=cars.length*0.90){
             saveBestCar();
             discardWorstCars();
             location.reload();
         }
        
          
-        if(cars.filter(c=>c.stuck).length>=cars.length*0.2){
-            location.reload();
-        }
+        // if(cars.filter(c=>c.stuck).length>=cars.length*0.2){
+        //     location.reload();
+        // }
         
         
 
