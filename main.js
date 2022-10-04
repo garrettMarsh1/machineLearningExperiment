@@ -224,7 +224,7 @@ function animate(time){
         
 
 
-        if(cars.filter(c=>c.damaged).length>=cars.length*0.90){
+        if(cars.filter(c=>c.damaged).length>=cars.length*0.91){
             saveBestCar();
             discardWorstCars();
             location.reload();
