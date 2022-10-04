@@ -212,17 +212,7 @@ function animate(time){
             ...cars.map(c=>c.y),
         ));
 
-        
-       
-        
-        
-
-
-        //if cars do not reach (x, -10000) in 2 minutes reload the page
-        
-        
-        
-
+  
 
         if(cars.filter(c=>c.damaged).length>=cars.length*0.91){
             saveBestCar();
@@ -230,10 +220,7 @@ function animate(time){
             location.reload();
         }
        
-         
-        // if(cars.filter(c=>c.stuck).length>=cars.length*0.2){
-        //     location.reload();
-        // }
+
         
         
 
