@@ -20,7 +20,7 @@ const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
 //N = number of cars generated
 const N = 500;
 // N2 = number of traffic generated
-const N2 = 30;
+const N2 = 60;
 
 
 //generate cars
@@ -156,7 +156,7 @@ function generateCars(N){
     
     for(let i =1;i<=N2;i++){
         
-        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-9000, 0),30,50,"DUMMY", random(3, 5));
+        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-20000, 0),30,50,"DUMMY", random(3, 5));
         //let trafficItem2 = new Traffic(road.getLaneCenter(2),random(-10000, 0),30,50,"trafficAI", 3 );
         //let trafficItem3 = new Traffic(road.getLaneCenter(3),random(-10000, 0),30,50,"trafficAI", 3 )
 
@@ -214,7 +214,7 @@ function animate(time){
 
   
 
-        if(cars.filter(c=>c.damaged).length>=cars.length*0.91){
+        if(cars.filter(c=>c.damaged).length>=cars.length*0.999999){
             saveBestCar();
             discardWorstCars();
             location.reload();
