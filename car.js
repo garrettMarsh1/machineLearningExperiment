@@ -27,6 +27,8 @@ class Car{
         
     }
 
+    
+
     update(roadBorders,traffic){
         if(!this.damaged){
             this.#move();
@@ -41,10 +43,14 @@ class Car{
             const outputs=NeuralNetwork.feedForward(offsets,this.brain);
 
             if(this.useBrain){
-                this.controls.forward=outputs[0];
-                this.controls.left=outputs[1];
-                this.controls.right=outputs[2];
-                this.controls.reverse=outputs[3];
+                this.controls.forward = outputs[0];
+                this.controls.left = outputs[1];
+                this.controls.right = outputs[2];
+                this.controls.reverse = outputs[3];
+                this.controls.forwardEase = outputs[4];
+                this.controls.leftEase = outputs[5];
+                this.controls.rightEase = outputs[6];
+                this.controls.reverseEase = outputs[7];
             }
         }
     }

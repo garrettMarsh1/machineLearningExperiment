@@ -18,9 +18,9 @@ const trafficCtx=carCanvas.getContext("2d");
 const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
 
 //N = number of cars generated
-const N = 500;
+const N = 100;
 // N2 = number of traffic generated
-const N2 = 20;
+const N2 = 50;
 
 
 //generate cars
@@ -46,8 +46,9 @@ if(localStorage.getItem("bestRuns")){
         cars[i].brain = JSON.parse
         (localStorage.getItem("bestRuns"));
         if(i!=0){
-            NeuralNetwork.mutate(cars[i].brain, .1);
+            NeuralNetwork.mutate(cars[i].brain, .03);
         }
+       
     }
 }
 //loading best runs for the traffic 
@@ -120,14 +121,24 @@ function discardBestCars(){
 function generateCars(N){
     let cars=[];
     for(let i =1;i<=N;i++){
-        cars.push(new Car(road.getLaneCenter(1),100,30,50,"AI"));
+        cars.push(new Car(road.getLaneCenter(1),100,20,50,"AI"));
+        
+        console.log(cars.damaged);
+        
     }
     return cars;
 }
 
-function nextGenerationLoad(){
+// function nextGenerationLoad(cars){
+    
+//     ;
+//    
+// }
+// nextGenerationLoad();
 
-}
+
+
+
 
 
 
@@ -145,7 +156,7 @@ function nextGenerationLoad(){
     
     for(let i =1;i<=N2;i++){
         
-        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-10000, 0),30,50,"trafficAI", 4);
+        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-9000, 0),30,50,"AI", random(3, 5));
         //let trafficItem2 = new Traffic(road.getLaneCenter(2),random(-10000, 0),30,50,"trafficAI", 3 );
         //let trafficItem3 = new Traffic(road.getLaneCenter(3),random(-10000, 0),30,50,"trafficAI", 3 )
 
@@ -165,7 +176,7 @@ function nextGenerationLoad(){
         //         }
             
         // }
-        console.log( trafficItem,);
+        //console.log( trafficItem,);
 
     }
     return traffic;
@@ -198,9 +209,39 @@ function animate(time){
     // logic for the best car path
     bestPath = cars.find(
         c=>c.y==Math.min(
-            ...cars.map(c=>c.y)
-
+            ...cars.map(c=>c.y),
         ));
+
+        
+       
+        
+        
+
+
+        //if cars do not reach (x, -10000) in 2 minutes reload the page
+        
+        
+        
+
+
+        if(cars.filter(c=>c.damaged).length>=cars.length*0.30){
+            saveBestCar();
+            discardWorstCars();
+            location.reload();
+        }
+       
+         
+        if(cars.filter(c=>c.stuck).length>=cars.length*0.2){
+            location.reload();
+        }
+        
+        
+
+
+
+       
+
+
     // logic for the worst car path
     worstPath = cars.find(
         c=>c.y==Math.max(
