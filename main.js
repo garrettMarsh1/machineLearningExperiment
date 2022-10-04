@@ -121,7 +121,7 @@ function discardBestCars(){
 function generateCars(N){
     let cars=[];
     for(let i =1;i<=N;i++){
-        cars.push(new Car(road.getLaneCenter(1),100,20,50,"AI"));
+        cars.push(new Car(road.getLaneCenter(1),100,30,50,"AI"));
         
         console.log(cars.damaged);
         
