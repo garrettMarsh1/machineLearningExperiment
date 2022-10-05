@@ -109,7 +109,7 @@ function generateCars(N){
     for(let i =1;i<=N2;i++){
         
         let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),
-        random(-20000, 0),30,50,"DUMMY", random(3, 5));
+        random(-20000, 0),30,50,"DUMMY");
         traffic.push(trafficItem);
         
     }
