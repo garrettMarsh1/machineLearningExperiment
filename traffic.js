@@ -1,4 +1,63 @@
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * 
  */
@@ -18,6 +77,7 @@
         this.angle = 0;
         this.damaged = false;
 
+<<<<<<< Updated upstream
         this.brain=controlType=="AI"; 
 
         if(controlType != "DUMMY"){
@@ -28,6 +88,9 @@
         }
         this.controls = new Controls(controlType);
         //console.log(this.brain)
+=======
+        
+>>>>>>> Stashed changes
         
     }
 /**
@@ -38,9 +101,10 @@
     update(roadBorders, obstacles){
         if(!this.damaged){
             this.#move();
-            this.polygon = this.#createPolygon();
+            this.trafficPolygon = this.#createPolygon();
             this.damaged = this.#assessDamage(roadBorders, obstacles);
         }
+<<<<<<< Updated upstream
         if(this.sensor){
             this.sensor.update(roadBorders, obstacles, );
             const offsets = this.sensor.readings.map(
@@ -62,6 +126,9 @@
             //console.log(outputs)
 
             }          
+=======
+                
+>>>>>>> Stashed changes
     }
 
 
@@ -76,12 +143,12 @@
  */
     #assessDamage(roadBorders, obstacles){
         for(let i = 0; i < roadBorders.length; i++){
-            if(polyIntersect(this.polygon, roadBorders[i])){
+            if(polyIntersect(this.trafficPolygon, roadBorders[i])){
                 return true;
             }
         }
         for(let i = 0; i < obstacles.length; i++){
-            if(polyIntersect(this.polygon, obstacles[i].polygon)){
+            if(polyIntersect(this.trafficPolygon, obstacles[i].trafficPolygon)){
                 return true;
             }
         }
@@ -151,26 +218,26 @@
  * @param {*} color 
  * @param {*} drawSensor 
  */
-    draw(ctx, color, drawSensor=false){
-        if(this.damaged){
-            ctx.fillStyle = "red";
-        }else{
-            ctx.fillStyle = color;
+ draw(ctx, color, drawSensor=false){
+            if(this.damaged){
+                ctx.fillStyle = "lightcoral";
+            }else{
+                ctx.fillStyle = color;
+            }
+            ctx.beginPath();
+            ctx.moveTo(this.trafficPolygon[0].x, this.trafficPolygon[0].y);
+            for(let i=1; i<this.trafficPolygon.length; i++){
+                ctx.lineTo(this.trafficPolygon[i].x, this.trafficPolygon[i].y);
+            }
+            ctx.fill();
+    
+           
+            if(this.trafficSensor && drawSensor){
+                this.trafficSensor.draw(ctx);
+            }
         }
-        ctx.beginPath();
-        ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
-        for(let i=1; i<this.polygon.length; i++){
-            ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
-        }
-        ctx.fill();
-
-       
-        if(this.sensor && drawSensor){
-            this.sensor.draw(ctx);
-        }
-
     }
-}
+
 
 
 
@@ -209,23 +276,14 @@
 //         this.angle = 0;
 //         this.damaged = false;
 
-//         //this.trafficBrain=controlType=="trafficAI";
-
-//         // if(controlType != "BOT"){
-//         //     this.trafficSensor = new TrafficSensor(this);
-//         //     this.trafficBrain = new TrafficNeuralNetwork(
-//         //         [this.trafficSensor.rayCount, 2, 2]
-//         //         );
-//         // }
-//         //this.controls = new Controls(controlType);
-//         //console.log(this.trafficBrain);
+        
 //     }
     
 
 //     update(roadBorders, obstacles, cars, traffic){
 //         if(!this.damaged){
 //             this.#moveTraffic();
-//             this.polygon = this.#createTrafficPolygon();
+//             this.trafficPolygon = this.#createTrafficPolygon();
 //             this.damaged = this.#assessTrafficDamage(roadBorders, obstacles, cars, traffic );
 //         }
 //         if(this.trafficSensor){
@@ -233,26 +291,20 @@
 //             const offsets = this.trafficSensor.trafficReadings.map(
 //                 s=>s==null?0:1-s.offset
 //             );
-//             const trafficOutputs = TrafficNeuralNetwork.feedForwardTraffic(offsets, this.trafficBrain);
             
 
-//             // if(this.trafficBrain){
-//             //     this.controls.forward = trafficOutputs[0];
-                
-//             //     this.controls.forwardEase = trafficOutputs[1];
-                
-//             // }    
+             
 //         }          
 //     }
 
 //     #assessTrafficDamage(roadBorders, traffic){
 //         for(let i = 0; i < roadBorders.length; i++){
-//             if(polyIntersect(this.polygon, roadBorders[i], traffic[i], cars[i])){
+//             if(polyIntersect(this.trafficPolygon, roadBorders[i], traffic[i], cars[i])){
 //                 return true;
 //             }
 //         }
 //         for(let i = 0; i < traffic.length; i++){
-//             if(polyIntersect(this.polygon, traffic[i].polygon, cars[i].polygon)){
+//             if(polyIntersect(this.trafficPolygon, traffic[i].trafficPolygon, cars[i].trafficPolygon)){
 //                 return true;
 //             }
 //         }
@@ -331,9 +383,9 @@
 //             ctx.fillStyle = color;
 //         }
 //         ctx.beginPath();
-//         ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
-//         for(let i=1; i<this.polygon.length; i++){
-//             ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
+//         ctx.moveTo(this.trafficPolygon[0].x, this.trafficPolygon[0].y);
+//         for(let i=1; i<this.trafficPolygon.length; i++){
+//             ctx.lineTo(this.trafficPolygon[i].x, this.trafficPolygon[i].y);
 //         }
 //         ctx.fill();
 

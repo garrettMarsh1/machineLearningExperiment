@@ -12,7 +12,7 @@ carCanvas.width=200;
 const carCtx=carCanvas.getContext("2d");
 
 const networkCtx=networkCanvas.getContext("2d");
-const trafficCtx=carCanvas.getContext("2d");
+//const carCtx=carCanvas.getContext("2d");
 
 
 const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
@@ -151,9 +151,15 @@ function generateCars(N){
  * @param {*} carSize 
  * @returns 
  */
+<<<<<<< Updated upstream
  function generateTraffic(N2){
     let traffic=[];
     
+=======
+ function generateTraffic(N2, carSize){
+    let traffic=[];
+    //carSize = []
+>>>>>>> Stashed changes
     for(let i =1;i<=N2;i++){
         
         let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-9000, 0),30,50,"DUMMY", random(3, 5));
@@ -162,6 +168,7 @@ function generateCars(N){
 
         traffic.push(trafficItem);
         
+<<<<<<< Updated upstream
 
         //traffic.push(trafficItem);
 
@@ -177,6 +184,20 @@ function generateCars(N){
             
         // }
         //console.log( trafficItem,);
+=======
+        let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),random(-300, 300),30,50,"trafficAI");
+        traffic.push(trafficItem);
+        let itemWillBlock = willTrafficBlock(road,  traffic, trafficItem, carSize);
+        if (!itemWillBlock) {
+            traffic.push(trafficItem);
+            
+        } else {
+            
+            
+            // decide if you just skip adding all together or try to generate another piece and see if it will fit
+        }
+        console.log(trafficItem)
+>>>>>>> Stashed changes
 
     }
     return traffic;
@@ -184,6 +205,7 @@ function generateCars(N){
 }
 
 
+<<<<<<< Updated upstream
 
 
 
@@ -194,6 +216,8 @@ function generateCars(N){
 
 
 
+=======
+>>>>>>> Stashed changes
 function animate(time){
 
     
@@ -263,12 +287,13 @@ function animate(time){
 
     // drawing traffic
     for(let i =0; i<traffic.length; i++){
+<<<<<<< Updated upstream
         traffic[i].draw(carCtx, "black");
+=======
+        traffic[i].draw(carCtx);
+>>>>>>> Stashed changes
     }
-    
-    
-    
-    
+ 
     // opacity of the parallel cars in current run
     carCtx.globalAlpha = 0.2;
 

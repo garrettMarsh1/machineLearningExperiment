@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 // /**
 //  * Returns true if (x, y) is contained within the rectangle defined by the given bounds
 //  * @param {number} x 
@@ -7,6 +8,19 @@
 //  * @param {number} upper_bound 
 //  * @param {number} lower_bound
 //  * @returns {boolean}
+=======
+
+
+/**
+ * Returns true if (x, y) is contained within the rectangle defined by the given bounds
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} left_bound 
+ * @param {number} right_bound 
+ * @param {number} upper_bound 
+ * @param {number} lower_bound
+ * @returns {boolean}
+>>>>>>> Stashed changes
 
 //  */
 //  function pointInBounds(x, y, left_bound, right_bound, upper_bound, lower_bound) {
