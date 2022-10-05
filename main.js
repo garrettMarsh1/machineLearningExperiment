@@ -40,6 +40,17 @@ if(localStorage.getItem("bestRuns")){
     }
 }
 
+if(localStorage.getItem("bestTrafficRuns")){
+    for(let i = 0; i < traffic.length; i++){
+        traffic[i].brain = JSON.parse
+        (localStorage.getItem("bestTrafficRuns"));
+        if(i!=0){
+            NeuralNetwork.mutate(traffic[i].brain, .5);
+        }
+       
+    }
+}
+
 animate();
 
 //saving and discard best/worst traffic runs from storage
@@ -48,10 +59,20 @@ function saveBestCar() {
     JSON.stringify(bestPath.brain));
 }
 
+function saveBestTraffic() {
+    localStorage.setItem("bestTrafficRuns", 
+    JSON.stringify(bestTrafficPath.brain));
+}
+
 // discarding worst car paths from storage
 function discardWorstCars(){
     localStorage.removeItem("worstRuns",
            JSON.stringify(worstPath.brain));
+}
+
+function discardWorstTRaffic(){
+    localStorage.removeItem("worstTrafficRuns",
+           JSON.stringify(worstTrafficPath.brain));
 }
 
 // discards best car paths from storage
@@ -116,6 +137,12 @@ function animate(time){
             ...cars.map(c=>c.y),
         ));
 
+    bestTrafficPath = traffic.find(
+        c=>c.y==Math.min(
+            ...traffic.map(c=>c.y),
+        ));
+
+
    
 
     // logic for the worst car path
@@ -128,6 +155,8 @@ function animate(time){
     //if %99 cars are damaged, save best path, discard worst, then reload page.
     if(cars.filter(c=>c.damaged).length>=cars.length*0.999999){
         saveBestCar();
+        saveBestTraffic();
+        discardWorstTraffic();
         discardWorstCars();
         history.go(0)
     }

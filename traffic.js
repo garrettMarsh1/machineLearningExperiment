@@ -5,7 +5,7 @@
 
 
  class Traffic {
-    constructor(x, y, width, height, controlType, maxSpeed=2){
+    constructor(x, y, width, height, controlType, maxSpeed=4){
         this.x=x;
         this.y=y;
         this.width=width;
@@ -35,14 +35,14 @@
  * @param {*} roadBorders 
  * @param {*} obstacles 
  */
-    update(roadBorders, obstacles){
+    update(roadBorders, obstacles, traffic){
         if(!this.damaged){
             this.#move();
             this.polygon = this.#createPolygon();
-            this.damaged = this.#assessDamage(roadBorders, obstacles);
+            this.damaged = this.#assessDamage(roadBorders, obstacles, traffic);
         }
         if(this.sensor){
-            this.sensor.update(roadBorders, obstacles, );
+            this.sensor.update(roadBorders, obstacles, traffic );
             const offsets = this.sensor.readings.map(
                 s=>s==null?0:1-s.offset
             );
@@ -74,14 +74,16 @@
  * @param {*} obstacles 
  * @returns 
  */
-    #assessDamage(roadBorders, obstacles){
+    #assessDamage(roadBorders, cars, traffic){
         for(let i = 0; i < roadBorders.length; i++){
             if(polyIntersect(this.polygon, roadBorders[i])){
                 return true;
             }
         }
-        for(let i = 0; i < obstacles.length; i++){
-            if(polyIntersect(this.polygon, obstacles[i].polygon)){
+
+
+        for(let i = 0; i < cars.length; i++){
+            if(polyIntersect(this.polygon, cars[i].polygon)){
                 return true;
             }
         }
@@ -140,6 +142,16 @@
 
         if(Math.abs(this.speed) < this.friction){
             this.speed = 0;
+        }
+
+        if(this.speed = this.maxSpeed){
+            const flip=this.speed>0?1:-1;
+            if(this.controls.left){
+                this.angle+=0.03*flip;
+            }
+            if(this.controls.right){
+                this.angle-=0.03*flip;
+            }
         }
 
         this.x -= Math.sin(this.angle) * this.speed;
@@ -209,16 +221,16 @@
 //         this.angle = 0;
 //         this.damaged = false;
 
-//         //this.trafficBrain=controlType=="trafficAI";
+//         //this.brain=controlType=="trafficAI";
 
 //         // if(controlType != "BOT"){
 //         //     this.trafficSensor = new TrafficSensor(this);
-//         //     this.trafficBrain = new TrafficNeuralNetwork(
+//         //     this.brain = new TrafficNeuralNetwork(
 //         //         [this.trafficSensor.rayCount, 2, 2]
 //         //         );
 //         // }
 //         //this.controls = new Controls(controlType);
-//         //console.log(this.trafficBrain);
+//         //console.log(this.brain);
 //     }
     
 
@@ -233,10 +245,10 @@
 //             const offsets = this.trafficSensor.trafficReadings.map(
 //                 s=>s==null?0:1-s.offset
 //             );
-//             const trafficOutputs = TrafficNeuralNetwork.feedForwardTraffic(offsets, this.trafficBrain);
+//             const trafficOutputs = TrafficNeuralNetwork.feedForwardTraffic(offsets, this.brain);
             
 
-//             // if(this.trafficBrain){
+//             // if(this.brain){
 //             //     this.controls.forward = trafficOutputs[0];
                 
 //             //     this.controls.forwardEase = trafficOutputs[1];
