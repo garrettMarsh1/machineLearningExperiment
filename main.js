@@ -225,7 +225,7 @@ function animate(time){
     if(cars.filter(c=>c.damaged).length>=cars.length*0.999999){
         saveBestCar();
         discardWorstCars();
-        window.location.reload();
+        history.go(0)
     }
 
     carCanvas.height = window.innerHeight;
