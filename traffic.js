@@ -64,7 +64,7 @@
 
 
  class Traffic {
-    constructor(x, y, width, height, controlType, maxSpeed=2){
+    constructor(x, y, width, height, controlType, maxSpeed=4){
         this.x=x;
         this.y=y;
         this.width=width;
@@ -98,15 +98,20 @@
  * @param {*} roadBorders 
  * @param {*} obstacles 
  */
-    update(roadBorders, obstacles){
+    update(roadBorders, obstacles, traffic){
         if(!this.damaged){
             this.#move();
+<<<<<<< HEAD
             this.trafficPolygon = this.#createPolygon();
             this.damaged = this.#assessDamage(roadBorders, obstacles);
+=======
+            this.polygon = this.#createPolygon();
+            this.damaged = this.#assessDamage(roadBorders, obstacles, traffic);
+>>>>>>> 44a990f09f3b8f27b1e6795d58115353d3f63184
         }
 <<<<<<< Updated upstream
         if(this.sensor){
-            this.sensor.update(roadBorders, obstacles, );
+            this.sensor.update(roadBorders, obstacles, traffic );
             const offsets = this.sensor.readings.map(
                 s=>s==null?0:1-s.offset
             );
@@ -141,14 +146,21 @@
  * @param {*} obstacles 
  * @returns 
  */
-    #assessDamage(roadBorders, obstacles){
+    #assessDamage(roadBorders, cars, traffic){
         for(let i = 0; i < roadBorders.length; i++){
             if(polyIntersect(this.trafficPolygon, roadBorders[i])){
                 return true;
             }
         }
+<<<<<<< HEAD
         for(let i = 0; i < obstacles.length; i++){
             if(polyIntersect(this.trafficPolygon, obstacles[i].trafficPolygon)){
+=======
+
+
+        for(let i = 0; i < cars.length; i++){
+            if(polyIntersect(this.polygon, cars[i].polygon)){
+>>>>>>> 44a990f09f3b8f27b1e6795d58115353d3f63184
                 return true;
             }
         }
@@ -207,6 +219,16 @@
 
         if(Math.abs(this.speed) < this.friction){
             this.speed = 0;
+        }
+
+        if(this.speed = this.maxSpeed){
+            const flip=this.speed>0?1:-1;
+            if(this.controls.left){
+                this.angle+=0.03*flip;
+            }
+            if(this.controls.right){
+                this.angle-=0.03*flip;
+            }
         }
 
         this.x -= Math.sin(this.angle) * this.speed;
@@ -276,7 +298,20 @@
 //         this.angle = 0;
 //         this.damaged = false;
 
+<<<<<<< HEAD
         
+=======
+//         //this.brain=controlType=="trafficAI";
+
+//         // if(controlType != "BOT"){
+//         //     this.trafficSensor = new TrafficSensor(this);
+//         //     this.brain = new TrafficNeuralNetwork(
+//         //         [this.trafficSensor.rayCount, 2, 2]
+//         //         );
+//         // }
+//         //this.controls = new Controls(controlType);
+//         //console.log(this.brain);
+>>>>>>> 44a990f09f3b8f27b1e6795d58115353d3f63184
 //     }
     
 
@@ -291,9 +326,21 @@
 //             const offsets = this.trafficSensor.trafficReadings.map(
 //                 s=>s==null?0:1-s.offset
 //             );
+<<<<<<< HEAD
             
 
              
+=======
+//             const trafficOutputs = TrafficNeuralNetwork.feedForwardTraffic(offsets, this.brain);
+            
+
+//             // if(this.brain){
+//             //     this.controls.forward = trafficOutputs[0];
+                
+//             //     this.controls.forwardEase = trafficOutputs[1];
+                
+//             // }    
+>>>>>>> 44a990f09f3b8f27b1e6795d58115353d3f63184
 //         }          
 //     }
 
