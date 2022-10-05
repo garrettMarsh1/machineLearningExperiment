@@ -45,7 +45,7 @@ if(localStorage.getItem("bestTrafficRuns")){
         traffic[i].brain = JSON.parse
         (localStorage.getItem("bestTrafficRuns"));
         if(i!=0){
-            NeuralNetwork.mutate(traffic[i].brain, .5);
+            NeuralNetwork.mutate(traffic[i].brain, .01);
         }
        
     }
