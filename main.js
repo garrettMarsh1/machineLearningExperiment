@@ -18,7 +18,7 @@ const trafficCtx=carCanvas.getContext("2d");
 const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
 
 //N = number of cars generated
-const N = 3;
+const N = 500;
 // N2 = number of traffic generated
 const N2 = 70;
 
