@@ -20,7 +20,7 @@ const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
 //N = number of cars generated
 const N = 500;
 // N2 = number of traffic generated
-const N2 = 60;
+const N2 = 70;
 
 
 //generate cars
@@ -217,7 +217,7 @@ function animate(time){
         if(cars.filter(c=>c.damaged).length>=cars.length*0.999999){
             saveBestCar();
             discardWorstCars();
-            location.reload();
+            window.location.reload(true);
         }
        
 
