@@ -18,7 +18,7 @@ const trafficCtx=carCanvas.getContext("2d");
 const road=new Road(carCanvas.width/2,carCanvas.width*0.9);
 
 //N = number of cars generated
-const N = 500;
+const N = 3;
 // N2 = number of traffic generated
 const N2 = 70;
 
@@ -212,13 +212,6 @@ function animate(time){
             ...cars.map(c=>c.y),
         ));
 
-  
-
-        if(cars.filter(c=>c.damaged).length>=cars.length*0.999999){
-            saveBestCar();
-            discardWorstCars();
-            location.reload();
-        }
    
 
     // logic for the worst car path
@@ -228,7 +221,12 @@ function animate(time){
 
         ));
    
-
+    
+    if(cars.filter(c=>c.damaged).length>=cars.length*0.999999){
+        saveBestCar();
+        discardWorstCars();
+        window.location.reload();
+    }
 
     carCanvas.height = window.innerHeight;
     networkCanvas.height = window.innerHeight;
