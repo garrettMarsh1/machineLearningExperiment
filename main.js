@@ -70,7 +70,7 @@ function discardWorstCars(){
            JSON.stringify(worstPath.brain));
 }
 
-function discardWorstTRaffic(){
+function discardWorstTraffic(){
     localStorage.removeItem("worstTrafficRuns",
            JSON.stringify(worstTrafficPath.brain));
 }
@@ -109,7 +109,7 @@ function generateCars(N){
     for(let i =1;i<=N2;i++){
         
         let trafficItem = new Traffic(road.getLaneCenter(random(0,3)),
-        random(-20000, 0),30,50,"DUMMY");
+        random(-20000, 0),30,50,"AI", random(3,5));
         traffic.push(trafficItem);
         
     }
@@ -151,6 +151,12 @@ function animate(time){
             ...cars.map(c=>c.y)
 
         ));
+    // logic for the worst car path
+    worstTrafficPath = traffic.find(
+        c=>c.y==Math.max(
+            ...traffic.map(c=>c.y)
+
+        ));
    
     //if %99 cars are damaged, save best path, discard worst, then reload page.
     if(cars.filter(c=>c.damaged).length>=cars.length*0.999999){
@@ -158,7 +164,7 @@ function animate(time){
         saveBestTraffic();
         discardWorstTraffic();
         discardWorstCars();
-        history.go(0)
+        location.reload();
     }
 
     //refresh page after 4 minutes
