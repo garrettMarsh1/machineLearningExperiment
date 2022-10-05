@@ -125,12 +125,20 @@ function animate(time){
 
         ));
    
-    
+    //if %99 cars are damaged, save best path, discard worst, then reload page.
     if(cars.filter(c=>c.damaged).length>=cars.length*0.999999){
         saveBestCar();
         discardWorstCars();
         history.go(0)
     }
+
+    //refresh page after 4 minutes
+    setTimeout(function(){
+        discardBestCars();
+        saveBestCar();
+        discardWorstCars();
+        history.go(0);
+    }, 240000);
 
     carCanvas.height = window.innerHeight;
     networkCanvas.height = window.innerHeight;
