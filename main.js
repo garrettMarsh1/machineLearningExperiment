@@ -91,7 +91,7 @@ function generateCars(N){
     for(let i =1;i<=N;i++){
         cars.push(new Car(road.getLaneCenter(1),100,30,50,"AI"));
         
-        console.log(cars.damaged);
+        
         
     }
     return cars;
@@ -164,7 +164,7 @@ function animate(time){
         saveBestTraffic();
         discardWorstTraffic();
         discardWorstCars();
-        location.reload();
+        history.go(0);
     }
 
     //refresh page after 4 minutes
