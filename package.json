@@ -1,1 +1,32 @@
-{}
+{
+  "name": "aitesting",
+  "description": "ISSUES:\r       training traffic and cars on same network. Need to make sure the traffic is learning along better bounds. As of now the traffic is not being affected by the cars. Having trouble implementing this. I believe i may need to make a specific trafficPolygon to avoid the traffic reading itself as an obstacle.",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garrettMarsh1/machineLearningExperiment.git"
+  },
+  "keywords": [
+    "node",
+    "mongodb",
+    "mongoose"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/garrettMarsh1/machineLearningExperiment/issues"
+  },
+  "homepage": "https://github.com/garrettMarsh1/machineLearningExperiment#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "mongodb": "^4.10.0",
+    "nodemon": "^2.0.20"
+  }
+}
