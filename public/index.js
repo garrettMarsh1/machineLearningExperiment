@@ -15,7 +15,7 @@ const road = new Road(carCanvas.width/2,carCanvas.width*0.9);
 
 
 //N = number of cars generated
-const N = 10;
+const N = 1000;
 // N2 = number of traffic generated
 const N2 = 50;
 
@@ -57,9 +57,10 @@ let worstPath = cars[0];
         for(let i = 0; i < cars.length; i++){
     
     
-            cars[i].brain = (syncData.length != 0) ? { levels: syncData } : JSON.parse(localStorage.getItem("bestRuns"));
+            cars.brain = (syncData.length != 0) ? { levels: syncData } : JSON.parse(localStorage.getItem("bestRuns"));
     
-            if(i!= 0){
+            if(syncData){
+                console.log("mutating!!!!")
                 NeuralNetwork.mutate(cars[i].brain, .1);
             }
            
@@ -72,7 +73,7 @@ let worstPath = cars[0];
             traffic[i].brain = JSON.parse
             (localStorage.getItem("bestTrafficRuns"));
             if(i!= 0){
-                NeuralNetwork.mutate(traffic[i].brain, .01);
+                NeuralNetwork.mutate(traffic[i].brain, .8);
             }
            
         }
@@ -170,7 +171,7 @@ function generateCars(N){
 
 
 
-function animate(time){
+async function animate(time){
 
     
     for(let i = 0; i<traffic.length; i++){
@@ -206,24 +207,29 @@ function animate(time){
             ...traffic.map(c => c.y)
 
         ));
+
+    // if cars.y is greater than bestPath.y then mark damaged as true 
+    if (cars.find(c => c.y > cars.y) >= (bestPath.y+1000)) {
+        cars.damaged = true;
+    }
    
     //if %99 cars are damaged, save best path, discard worst, then reload page.
-    if (cars.filter(c => c.damaged).length >=  cars.length*0.35) {
+    if (cars.filter(c => c.damaged).length >=  cars.length*0.75) {
         
-        discardWorstTraffic();
-        discardWorstCars();
-        discardBestCars();
-        saveBestCar();
-        saveBestTraffic(); 
-        history.go(0);
+        await discardWorstTraffic();
+        await discardWorstCars();
+        await discardBestCars();
+        await saveBestCar();
+        await saveBestTraffic(); 
+        await history.go(0);
     }
 
     //refresh page after 4 minutes
-    setTimeout(function(){
-        discardBestCars();
-        saveBestCar();
-        discardWorstCars();
-        history.go(0);
+    setTimeout(async function(){
+        await discardBestCars();
+        await discardWorstCars();
+        await saveBestCar();
+        await history.go(0);
     }, 240000/2);
 
     carCanvas.height = window.innerHeight;
