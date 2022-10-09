@@ -1,16 +1,16 @@
 body{
     margin:0;
-    background: darkolivegreen;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+    background:darkolivegreen;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
 #verticalButtons{
-    display: flex;
-    flex-direction: column;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
 }
 
 button{
@@ -18,28 +18,26 @@ button{
     border-radius: 5px;
     padding: 5px 5px 7px 5px;
     margin: 2px;
-    cursor: pointer;
+    cursor:pointer;
 }
-
 button:hover{
-    background: blueviolet;
+    background:blue;
 }
 
 #networkCanvas{
-    background: black;
-    justify-content: right;
-    
-   
+    background:black;
 }
-
-#trafficNetworkCanvas{
-    background: black;
-    justify-content: left;
-   
-}
-
 #carCanvas{
-    background: darkslategray;
+    background:darkslateblue;
+}
+.dropdown{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin:2px;
+    border: none;
+    border-radius: 5px;
+    background:whitesmoke;
+    padding:2px;
     justify-content: center;
-   
 }

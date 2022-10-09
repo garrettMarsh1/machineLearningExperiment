@@ -1,5 +1,5 @@
 class Car{
-    constructor(x,y,width,height,controlType,maxSpeed=5,color="blue"){
+    constructor(x,y,width,height,controlType,maxSpeed=6,color="blue"){
         this.x=x;
         this.y=y;
         this.width=width;
@@ -17,7 +17,7 @@ class Car{
         if(controlType!="DUMMY"){
             this.sensor=new Sensor(this);
             this.brain=new NeuralNetwork(
-                [this.sensor.rayCount,12,8]
+                [this.sensor.rayCount,6,8]
             );
         }
         this.controls=new Controls(controlType);
@@ -31,12 +31,18 @@ class Car{
 
     update(roadBorders,traffic){
         if(!this.damaged){
+            const old={x:this.x,y:this.y}
             this.#move();
+            this.fitness+=old.y-this.y;
+            
+            const laneWidth=road.width/road.laneCount;
+            const penalty=Math.abs((this.x-road.left)%laneWidth-laneWidth/2);
+            this.fitness-=penalty*0.05;
             this.polygon=this.#createPolygon();
-            this.damaged=this.#assessDamage(roadBorders,traffic);
+            this.damaged=this.#assessDamage(road.borders,traffic);
         }
         if(this.sensor){
-            this.sensor.update(roadBorders,traffic);
+            this.sensor.update(road.borders,traffic);
             const offsets=this.sensor.readings.map(
                 s=>s==null?0:1-s.offset
             );
