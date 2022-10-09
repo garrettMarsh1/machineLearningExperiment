@@ -7,7 +7,7 @@ const cors = require('cors');
 
 
 const app = express();
-app.use('/public', express.static('public'))
+app.use('/docs', express.static('docs'))
 app.use(cors())
 app.use(express.json());
 app.use(require('body-parser').urlencoded({ extended: false, limit: '200mb'}));
@@ -15,7 +15,7 @@ const port = process.env.PORT || 8080;
 
 // sendFile will go here
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, '/public/index.html'));
+    res.sendFile(path.join(__dirname, '/docs/index.html'));
 })
 
 app.post('/sync', async function(request, response) {
