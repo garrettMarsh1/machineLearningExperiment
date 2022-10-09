@@ -7,7 +7,7 @@ const cors = require('cors');
 
 
 const app = express();
-app.use('/docs', express.static('docs'))
+app.use('/public', express.static('public'))
 app.use(cors())
 app.use(express.json());
 app.use(require('body-parser').urlencoded({ extended: false, limit: '200mb'}));
@@ -15,7 +15,7 @@ const port = process.env.PORT || 8080;
 
 // sendFile will go here
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, '/docs/index.html'));
+    res.sendFile(path.join(__dirname, '/public/index.html'));
 })
 
 app.post('/sync', async function(request, response) {
@@ -38,7 +38,7 @@ app.post('/sync', async function(request, response) {
     update = { $set: { data: request.body } };
 
     // Insert data to the database 
-    // Read https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne
+    // Read https://www.mongodb.com/public/manual/reference/method/db.collection.updateOne
     let data = await db.collection('carData').updateOne(query, update, options);
     
     // For some fuck off reason, if this some how fails you have an edge case to tell people it didnt save
