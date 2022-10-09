@@ -11,6 +11,7 @@ class Car{
         this.friction=0.05;
         this.angle=0;
         this.damaged=false;
+        this.carFit = 0;
 
         this.useBrain=controlType=="AI";
 
@@ -33,11 +34,11 @@ class Car{
         if(!this.damaged){
             const old={x:this.x,y:this.y}
             this.#move();
-            this.fitness+=old.y-this.y;
+            this.carFit+=old.y-this.y;
             
             const laneWidth=road.width/road.laneCount;
             const penalty=Math.abs((this.x-road.left)%laneWidth-laneWidth/2);
-            this.fitness-=penalty*0.05;
+            this.carFit-=penalty*0.05;
             this.polygon=this.#createPolygon();
             this.damaged=this.#assessDamage(road.borders,traffic);
         }
