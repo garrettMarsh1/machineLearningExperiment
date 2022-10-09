@@ -13,7 +13,7 @@
 
         this.speed = 0;
         this.acceleration = 3;
-        this.maxSpeed = maxSpeed/1.8;
+        this.maxSpeed = maxSpeed;
         this.friction = 0.05;
         this.angle2= 0;
         this.damaged = false;

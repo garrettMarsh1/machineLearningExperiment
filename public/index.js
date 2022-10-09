@@ -34,60 +34,133 @@ let bestPath = cars[0];
 let worstPath = cars[0];
 // let worstTrafficPath = traffic[0];
 
+
+
+// if(localStorage.getItem("bestRuns")){
+//     for(let i = 0; i < traffic.length; i++){
+//         cars[i].brain = JSON.parse
+//         (localStorage.getItem("bestRuns"));
+//         if(i!= 0){
+//             NeuralNetwork.mutate(cars[i].brain, .001);
+//         }
+       
+//     }
+// }
+
+// if(localStorage.getItem("bestTrafficRuns")){
+//     for(let i = 0; i < traffic.length; i++){
+//         traffic[i].brain = JSON.parse
+//         (localStorage.getItem("bestTrafficRuns"));
+//         if(i!= 0){
+//             NeuralNetwork.mutate(traffic[i].brain, .8);
+//         }
+       
+//     }
+// }
+
+
+
+
+
+
+// function saveBestCar() {
+//     localStorage.setItem("bestRuns", 
+//     JSON.stringify(bestPath.brain));
+// }
+
+
+
+
 //saving best runs for car
+// (async function () {
+//     // body of the function
+//     if (localStorage.getItem("bestRuns")) {
+    
+//         const request = await fetch("/pull");
+//         const response = await request.json();
+    
+//         if (response.message) console.log(response);
+//         console.log(JSON.parse(localStorage.getItem("bestRuns")))
+
+//         let syncData = response.data.map( data => {
+//             //console.log(syncData);
+//             return data.levels;
+//         })
+
+
+//         syncData = syncData.flat(6);
+
+        
+    
+//         for(let i = 0; i < cars.length; i++){
+    
+    
+//             cars.brain = (syncData.length != 0) ? { levels: syncData } : JSON.parse(localStorage.getItem("bestRuns"));
+    
+//             if(i != 0){
+//                 NeuralNetwork.mutate(cars.brain, .0000001);
+//             }
+           
+//         }
+    
+//     }
+    
+    
+    
+// }());
+
+
 (async function () {
     // body of the function
-    if (localStorage.getItem("bestRuns")) {
+     if (localStorage.getItem("bestRuns")) {
+
+       
     
         const request = await fetch("/pull");
         const response = await request.json();
     
         if (response.message) console.log(response);
-        console.log(JSON.parse(localStorage.getItem("bestRuns")))
+        //console.log(JSON.parse(localStorage.getItem("bestRuns")))
 
         let syncData = response.data.map( data => {
             return data.levels;
         })
-
+        //console.log(syncData);
 
         syncData = syncData.flat(6);
 
-        console.log(syncData);
-    
+        
+        console.log('before mutate')
         for(let i = 0; i < cars.length; i++){
     
     
-            cars.brain = (syncData.length != 0) ? { levels: syncData } : JSON.parse(localStorage.getItem("bestRuns"));
-    
-            if(syncData){
-                console.log("mutating!!!!")
-                NeuralNetwork.mutate(cars[i].brain, .1);
-            }
-           
-        }
-    
-    }
-    
-    if(localStorage.getItem("bestTrafficRuns")){
-        for(let i = 0; i < traffic.length; i++){
-            traffic[i].brain = JSON.parse
-            (localStorage.getItem("bestTrafficRuns"));
-            if(i!= 0){
-                NeuralNetwork.mutate(traffic[i].brain, .8);
+            cars.brain = (syncData.length != 0) ? { levels: syncData } : JSON.parse(bestRuns);
+           // console.log(cars.brain);
+            //console.log(syncData);
+            
+            
+            if(i != 0){
+                
+                NeuralNetwork.mutate(cars.brain, .000001)
+               // console.log('mutating');
             }
            
         }
     }
     
-}());
+    }());
 
-animate();
+
+
 
 
 //saving and discard best/worst traffic runs from storage
 async function saveBestCar() {
-    localStorage.setItem("bestRuns", 
-    JSON.stringify(bestPath.brain));
+
+     
+        localStorage.setItem("bestTrafficRuns", JSON.stringify(bestTrafficPath.brain));
+    
+   
 
 
     const options = {
@@ -111,16 +184,70 @@ async function saveBestCar() {
     if (response.error) console.log("Roh oh raggie");
 }
 
-function saveBestTraffic() {
-    localStorage.setItem("bestTrafficRuns", 
-    JSON.stringify(bestTrafficPath.brain));
+async function discardBestCars() {
+   
+
+
+    const options = {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+
+        },
+        body: JSON.stringify(bestPath.brain)
+    }
+
+    console.log('Deleting previous Best Cars:', bestPath);
+
+    const request = await fetch("/delete", options);
+    const response = await request.json();
+
+    console.log(response);
+
+    if (response.ok) console.log("successfully deleted data from server");
+    if (response.error) console.log("Roh oh raggie");
 }
 
-// discarding worst car paths from storage
-function discardWorstCars(){
-    localStorage.removeItem("worstRuns",
-           JSON.stringify(worstPath.brain));
+async function discardWorstCars() {
+   
+
+
+    const options = {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+
+        },
+        body: JSON.stringify(worstPath.brain)
+    }
+
+    console.log('Deleting previous Best Cars:', worstPath);
+
+    const request = await fetch("/delete", options);
+    const response = await request.json();
+
+    console.log(response);
+
+    if (response.ok) console.log("successfully deleted data from server");
+    if (response.error) console.log("Roh oh raggie");
 }
+
+
+
+
+
+
+
+
+
+
+// discarding worst car paths from storage
+// function discardWorstCars(){
+//     localStorage.removeItem("worstRuns",
+//            JSON.stringify(worstPath.brain));
+// }
 
 function discardWorstTraffic(){
     localStorage.removeItem("worstTrafficRuns",
@@ -169,7 +296,7 @@ function generateCars(N){
     
 }
 
-
+animate();
 
 async function animate(time){
 
@@ -180,8 +307,6 @@ async function animate(time){
     for(let i = 0; i<cars.length; i++){
         cars[i].update(road.borders, traffic, cars);
     }
-
-
 
     // logic for the best car path
     bestPath = cars.find(
@@ -209,7 +334,7 @@ async function animate(time){
         ));
 
     // if cars.y is greater than bestPath.y then mark damaged as true 
-    if (cars.find(c => c.y > cars.y) >= (bestPath.y+1000)) {
+    if (cars.find(c => c.y > cars.y) >= (bestPath.y+5000)) {
         cars.damaged = true;
     }
    
@@ -269,7 +394,7 @@ async function animate(time){
     requestAnimationFrame(animate);
 };
 
-// HEKDAHBFJKAD:JFJKADJHGJLAJSILF
+
 
 
 
