@@ -1,5 +1,5 @@
 class Car{
-    constructor(x,y,width,height,controlType,maxSpeed=5,color="blue"){
+    constructor(x,y,width,height,controlType,maxSpeed=6,color="blue"){
         this.x=x;
         this.y=y;
         this.width=width;
@@ -11,13 +11,14 @@ class Car{
         this.friction=0.05;
         this.angle=0;
         this.damaged=false;
+        this.carFit = 0;
 
         this.useBrain=controlType=="AI";
 
         if(controlType!="DUMMY"){
             this.sensor=new Sensor(this);
             this.brain=new NeuralNetwork(
-                [this.sensor.rayCount,12,8]
+                [this.sensor.rayCount,6,8]
             );
         }
         this.controls=new Controls(controlType);
@@ -31,12 +32,18 @@ class Car{
 
     update(roadBorders,traffic){
         if(!this.damaged){
+            const old={x:this.x,y:this.y}
             this.#move();
+            this.carFit+=old.y-this.y;
+            
+            const laneWidth=road.width/road.laneCount;
+            const penalty=Math.abs((this.x-road.left)%laneWidth-laneWidth/2);
+            this.carFit-=penalty*0.05;
             this.polygon=this.#createPolygon();
-            this.damaged=this.#assessDamage(roadBorders,traffic);
+            this.damaged=this.#assessDamage(road.borders,traffic);
         }
         if(this.sensor){
-            this.sensor.update(roadBorders,traffic);
+            this.sensor.update(road.borders,traffic);
             const offsets=this.sensor.readings.map(
                 s=>s==null?0:1-s.offset
             );
@@ -66,7 +73,6 @@ class Car{
                 return true;
             }
         }
-        
         
         return false;
     }
@@ -98,18 +104,14 @@ class Car{
         if(this.controls.forward){
             this.speed+=this.acceleration;
         }
-
         if(this.controls.forwardEase){
-            this.speed+=this.acceleration*.5;
+            this.speed+=this.acceleration/2;
         }
-
-
         if(this.controls.reverse){
             this.speed-=this.acceleration;
         }
-
-        if(this.controls.reverse){
-            this.speed-=this.acceleration*.5;
+        if(this.controls.reverseEase){
+            this.speed-=this.acceleration/2;
         }
 
         if(this.speed>this.maxSpeed){
@@ -129,19 +131,13 @@ class Car{
             this.speed=0;
         }
 
-        if(this.speed!=0){
+        if(this.speed != 0){
             const flip=this.speed>0?1:-1;
             if(this.controls.left){
-                this.angle+=0.04*flip;
-            }
-            if(this.controls.leftEase){
-                this.angle+=0.01*flip;
+                this.angle+=0.03*flip;
             }
             if(this.controls.right){
-                this.angle-=0.04*flip;
-            }
-            if(this.controls.rightEase){
-                this.angle-=0.01*flip;
+                this.angle-=0.03*flip;
             }
         }
 
