@@ -67,7 +67,6 @@ class Car{
             }
         }
         
-        
         return false;
     }
 
@@ -98,18 +97,14 @@ class Car{
         if(this.controls.forward){
             this.speed+=this.acceleration;
         }
-
         if(this.controls.forwardEase){
-            this.speed+=this.acceleration*.5;
+            this.speed+=this.acceleration/2;
         }
-
-
         if(this.controls.reverse){
             this.speed-=this.acceleration;
         }
-
-        if(this.controls.reverse){
-            this.speed-=this.acceleration*.5;
+        if(this.controls.reverseEase){
+            this.speed-=this.acceleration/2;
         }
 
         if(this.speed>this.maxSpeed){
@@ -129,19 +124,13 @@ class Car{
             this.speed=0;
         }
 
-        if(this.speed!=0){
+        if(this.speed != 0){
             const flip=this.speed>0?1:-1;
             if(this.controls.left){
-                this.angle+=0.04*flip;
-            }
-            if(this.controls.leftEase){
-                this.angle+=0.01*flip;
+                this.angle+=0.03*flip;
             }
             if(this.controls.right){
-                this.angle-=0.04*flip;
-            }
-            if(this.controls.rightEase){
-                this.angle-=0.01*flip;
+                this.angle-=0.03*flip;
             }
         }
 

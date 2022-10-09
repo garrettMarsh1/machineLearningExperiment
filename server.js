@@ -10,7 +10,7 @@ const app = express();
 app.use('/public', express.static('public'))
 app.use(cors())
 app.use(express.json());
-app.use(require('body-parser').urlencoded({ extended: false }));
+app.use(require('body-parser').urlencoded({ extended: false, limit: '200mb'}));
 const port = process.env.PORT || 8080;
 
 // sendFile will go here
